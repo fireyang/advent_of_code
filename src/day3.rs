@@ -63,21 +63,6 @@ mod day3 {
         count
     }
 
-    // #[allow(dead_code)]
-    // pub fn part2(vec: Vec<String>) -> i32 {
-    //     let v = get_inputs(&vec);
-    //     let mut count =  0;
-    //     for it in v.iter(){
-    //         let (min, max, c, s) = it;
-    //         let s_char = s.chars().nth((*min -1) as usize).unwrap();
-    //         let e_char = s.chars().nth((*max -1) as usize).unwrap();
-    //         if (&s_char == c || &e_char == c) && s_char != e_char{
-    //             // println!("{:?}", (it, s_char, e_char));
-    //             count += 1;
-    //         }
-    //     }
-    //     count
-    // }
 
 }
 

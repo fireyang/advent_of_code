@@ -7,7 +7,7 @@ pub fn parse_from_file(path: &str) -> Result<Vec<String>, &'static str> {
         .trim()
         .lines()
         .map(|x| x.trim())
-        .filter(|&x| x.len() != 0)
+        // .filter(|&x| x.len() != 0)
         .map(|x| x.to_string())
         .collect();
     Ok(contents)
