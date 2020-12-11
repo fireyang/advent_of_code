@@ -6,10 +6,10 @@ mod day1 {
             .map(|value| value.parse::<i32>().unwrap())
             .collect();
         for i in 0..v.len() {
-            for j in i+1..v.len() {
+            for j in i + 1..v.len() {
                 if v[i] + v[j] == 2020 {
                     println!("out:{:?},{:?}", i, j);
-                    return v[i] * v[j]
+                    return v[i] * v[j];
                 }
             }
         }
@@ -24,18 +24,17 @@ mod day1 {
             .collect();
         // println!("out:{:?}", v);
         for i in 0..v.len() {
-            for j in i+1..v.len() {
-                for k in j+1..v.len() {
-                    if v[i] + v[j] +v[k] == 2020 {
+            for j in i + 1..v.len() {
+                for k in j + 1..v.len() {
+                    if v[i] + v[j] + v[k] == 2020 {
                         println!("out:{:?}", (i, j, k));
-                        return v[i] * v[j] * v[k]
+                        return v[i] * v[j] * v[k];
                     }
                 }
             }
         }
         0
     }
-
 }
 
 #[cfg(test)]

@@ -1,15 +1,14 @@
 mod day9 {
 
-
     #[allow(dead_code)]
     pub fn part1(vec: Box<Vec<String>>, preamble_len: usize) -> i64 {
-        let v:Vec<i64> =vec.iter().map(|it|it.parse().unwrap()).collect();
-        for check in 0..vec.len()-preamble_len{
+        let v: Vec<i64> = vec.iter().map(|it| it.parse().unwrap()).collect();
+        for check in 0..vec.len() - preamble_len {
             let mut is_valid = false;
             let check_pos = check + preamble_len;
-            for i in check..check_pos{
-                for j in i+1..check_pos{
-                    if v[i] + v[j] == v[check_pos]{
+            for i in check..check_pos {
+                for j in i + 1..check_pos {
+                    if v[i] + v[j] == v[check_pos] {
                         // println!("{:?}", (check_pos,v[check_pos], v[i] , v[j] ));
                         is_valid = true;
                         break;
@@ -19,7 +18,7 @@ mod day9 {
                     break;
                 }
             }
-            if !is_valid{
+            if !is_valid {
                 println!("{:?}", (check_pos, v[check_pos], is_valid));
                 return v[check_pos];
             }
@@ -27,39 +26,36 @@ mod day9 {
         0
     }
 
-
     #[allow(dead_code)]
     pub fn part2(vec: Box<Vec<String>>, pos: usize) -> i64 {
-        let v:Vec<i64> =vec.iter().map(|it|it.parse().unwrap()).collect();
+        let v: Vec<i64> = vec.iter().map(|it| it.parse().unwrap()).collect();
         let mut start = 0;
-        let mut end = start+1;
-        let mut all = v[start]+v[end];
+        let mut end = start + 1;
+        let mut all = v[start] + v[end];
         let check_val = v[pos];
-        while all != check_val || end >= vec.len(){
-            if all < check_val{
-                end +=1;
+        while all != check_val || end >= vec.len() {
+            if all < check_val {
+                end += 1;
                 all += v[end];
-            }else if all > check_val{
+            } else if all > check_val {
                 all -= v[start];
-                start +=1;
+                start += 1;
             }
             // println!("{:?}", (start, end, all));
         }
         println!("{:?}", (start, end, v[start], v[end], all, check_val));
         let mut min = 0;
         let mut max = 0;
-        for i in start..end{
-            if v[i] > max{
-                max =v[i]
+        for i in start..end {
+            if v[i] > max {
+                max = v[i]
             }
-            if min==0 || min > v[i]{
+            if min == 0 || min > v[i] {
                 min = v[i]
             }
         }
-        min+max
+        min + max
     }
-
-
 }
 
 #[cfg(test)]
@@ -84,5 +80,4 @@ mod tests {
 
         assert_eq!(v, 3353494);
     }
-
 }

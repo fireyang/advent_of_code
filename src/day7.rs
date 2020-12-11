@@ -1,27 +1,29 @@
 // extern crate regex;
 mod day7 {
-    use std::cell::{RefCell};
+    use std::cell::RefCell;
     use std::rc::Rc;
 
     use std::collections::HashMap;
     use std::collections::HashSet;
 
     #[derive(Clone, Debug)]
-    struct Bag{
+    struct Bag {
         num: i32,
         color: String,
     }
 
     fn _gen_deps(vec: Box<Vec<String>>) -> Vec<(String, Vec<(i32, String)>)> {
-        let chan: Vec<_> = vec.iter()
-            .map(|x|{
+        let chan: Vec<_> = vec
+            .iter()
+            .map(|x| {
                 let x = x.replace("bags", "").replace("bag", "").replace(".", "");
-                let v1 :Vec<&str> = x.split("contain").collect();
+                let v1: Vec<&str> = x.split("contain").collect();
                 let x1 = v1.get(0).unwrap().trim();
                 let next = v1.get(1).unwrap();
-                let bags: Vec<_> = next.split(",")
-                    .map(|v|{
-                        let bags:Vec<&str> = v.trim().splitn(2, " ").collect();
+                let bags: Vec<_> = next
+                    .split(",")
+                    .map(|v| {
+                        let bags: Vec<&str> = v.trim().splitn(2, " ").collect();
                         let n = bags[0];
                         match n {
                             "no" => (0, "".to_string()),
@@ -31,25 +33,26 @@ mod day7 {
                                 (num, color.to_string())
                                 // let list =  map.entry(color).or_insert(Vec::new()).push("test");
                                 // list.push(x1.to_string());
-                            },
+                            }
                         }
                     })
                     .collect();
                 (x1.to_string(), bags)
-            }).collect();
+            })
+            .collect();
         chan
     }
 
-    fn _belong_map(vec: Box<Vec<String>>) -> HashMap<String, Vec<String>>{
-        let mut map:HashMap<String, Vec<String>>= HashMap::new();
+    fn _belong_map(vec: Box<Vec<String>>) -> HashMap<String, Vec<String>> {
+        let mut map: HashMap<String, Vec<String>> = HashMap::new();
         let chan: Vec<_> = _gen_deps(vec);
-        for it in chan.iter(){
+        for it in chan.iter() {
             let (color1, bags) = it;
-            for it2 in bags.iter(){
+            for it2 in bags.iter() {
                 match it2 {
-                    (0, _) =>(),
+                    (0, _) => (),
                     (_num, color) => {
-                        let list  =  map.entry(color.to_string()).or_insert(Vec::new());
+                        let list = map.entry(color.to_string()).or_insert(Vec::new());
                         list.push(color1.to_string());
                     }
                 }
@@ -58,17 +61,20 @@ mod day7 {
         map
     }
 
-    fn _include_map(vec: Box<Vec<String>>) -> HashMap<String, Vec<Bag>>{
-        let mut map:HashMap<String, Vec<Bag>>= HashMap::new();
+    fn _include_map(vec: Box<Vec<String>>) -> HashMap<String, Vec<Bag>> {
+        let mut map: HashMap<String, Vec<Bag>> = HashMap::new();
         let chan: Vec<_> = _gen_deps(vec);
-        for it in chan.iter(){
+        for it in chan.iter() {
             let (color1, bags) = it;
-            for it2 in bags.iter(){
+            for it2 in bags.iter() {
                 match it2 {
-                    (0, _) =>(),
+                    (0, _) => (),
                     (num, color) => {
-                        let list  =  map.entry(color1.to_string()).or_insert(Vec::new());
-                        let bag = Bag{num: *num , color: color.to_string()};
+                        let list = map.entry(color1.to_string()).or_insert(Vec::new());
+                        let bag = Bag {
+                            num: *num,
+                            color: color.to_string(),
+                        };
                         list.push(bag);
                     }
                 }
@@ -77,8 +83,12 @@ mod day7 {
         map
     }
 
-    fn get_parent_num(map: Box<HashMap<String, Vec<String>>>, key: &String, out:Rc<RefCell<HashSet<String>>>) {
-        if let Some(bags) = map.get(key){
+    fn get_parent_num(
+        map: Box<HashMap<String, Vec<String>>>,
+        key: &String,
+        out: Rc<RefCell<HashSet<String>>>,
+    ) {
+        if let Some(bags) = map.get(key) {
             bags.iter().for_each(|it| {
                 out.borrow_mut().insert(it.to_string());
                 get_parent_num(map.clone(), &it, out.clone());
@@ -86,9 +96,9 @@ mod day7 {
         }
     }
 
-    fn _get_child_num(map: Rc<HashMap<String, Vec<Bag>>>, key: &String) -> i32{
+    fn _get_child_num(map: Rc<HashMap<String, Vec<Bag>>>, key: &String) -> i32 {
         let mut count = 0;
-        if let Some(bags) = map.get(key){
+        if let Some(bags) = map.get(key) {
             bags.iter().for_each(|it| {
                 let v = _get_child_num(map.clone(), &it.color);
                 count += v * it.num + it.num;
@@ -112,7 +122,6 @@ mod day7 {
         let v = _get_child_num(Rc::new(map), bag);
         v
     }
-
 }
 
 #[cfg(test)]
@@ -135,7 +144,6 @@ mod tests {
         // let list = common::parse_from_file("./data/day7_test.txt");
         let v = day7::part2(Box::new(list.unwrap()), &"shiny gold".to_string());
 
-        assert_eq!(v, 871);
+        assert_eq!(v, 50100);
     }
-
 }
