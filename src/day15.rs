@@ -38,18 +38,18 @@ mod tests {
     use super::*;
     use crate::common;
 
-    // #[test]
-    // fn day15_part1() {
-    //     // let list = common::parse_from_file("./data/day15_test.txt");
-    //     // let list = common::parse_from_file("./data/day15_part1.txt");
-    //     // let v = day15::part1(Box::new(list.unwrap()));
-    //     // let v = day15::part1("0,3,6".to_string());
-    //     // let v = day15::part1("3,1,2".to_string());
-    //     // let v = day15::part1("2,1,3".to_string());
-    //     let v = day15::part1("19,20,14,0,9,1".to_string(), 2020);
-    //     // let v = day15::part1("2,1,3".to_string());
-    //     assert_eq!(v, 1325);
-    // }
+    #[test]
+    fn day15_part1() {
+        // let list = common::parse_from_file("./data/day15_test.txt");
+        // let list = common::parse_from_file("./data/day15_part1.txt");
+        // let v = day15::part1(Box::new(list.unwrap()));
+        // let v = day15::part1("0,3,6".to_string());
+        // let v = day15::part1("3,1,2".to_string());
+        // let v = day15::part1("2,1,3".to_string());
+        let v = day15::part1("19,20,14,0,9,1".to_string(), 2020);
+        // let v = day15::part1("2,1,3".to_string());
+        assert_eq!(v, 1325);
+    }
 
     #[test]
     fn day15_part2() {
