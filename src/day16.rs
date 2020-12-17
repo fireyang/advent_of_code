@@ -73,7 +73,7 @@ mod day16 {
         let mut list: Vec<(String, Range, Range)> = vec![];
         let mut tickets: Vec<Vec<i32>> = vec![];
         let mut field_map: HashMap<String, HashSet<i32>> = HashMap::new();
-        let mut idx_map: HashMap<usize, HashSet<String>> = HashMap::new();
+        let mut idx_map: HashMap<usize, usize> = HashMap::new();
         for s in vec.iter() {
             if s == "your ticket:" {
                 stage = 1;
@@ -97,10 +97,11 @@ mod day16 {
                     _ => {
                         let v = s.split(',').map(|x| x.parse::<i32>().unwrap()).collect();
                         tickets.push(v);
-                    }
+                    } // _ =>()
                 }
             }
         }
+        let init_v = (1 << list.len()) - 1;
 
         // tickets.iter().for_each(|ticket| {
         //     ticket.iter().enumerate().for_each(|(idx, x)| {
@@ -115,16 +116,26 @@ mod day16 {
 
         tickets.iter().for_each(|ticket| {
             ticket.iter().enumerate().for_each(|(idx, x)| {
-                list.iter().for_each(|(key, r1, r2)| {
+                for it in list.iter() {
+                    let (_key, r1, r2) = it;
                     let v = (x >= &r1.0 && x <= &r1.1) || (x >= &r2.0 && x <= &r2.1);
-                    println!("{:?}", (idx, key, v));
-                    if !v{
-                        idx_map.entry(idx).or_insert(HashSet::new()).insert(key.to_string());
+                    if !v {
+                        let v = idx_map.entry(idx).or_insert(init_v);
+                        *v &= !(1 << idx);
+                        // println!("222:{:?}, {:#b}, {:#b}, {:#b}", idx, v,init_v, !(1 << idx));
                     }
-                });
+                }
             })
         });
-        println!("{:?}", idx_map);
+        // for (k, v) in idx_map.iter(){
+        //     println!("{:?}, {:#b} ", k,v);
+        // }
+        // for (idx, it) in list.enumerate().iter(){
+        //     for (k, v) in idx_map.iter(){
+        //         println!("{:?}, {:#b} ", k,v);
+        //     }
+        //     println!("{:?}, {:#b} ", k,v);
+        // }
         // for it in list.iter(){
         //     for (idx, set) in idx_map.iter(){
         //         if !set.contains(&it.0){
@@ -142,8 +153,8 @@ mod day16 {
         //         })
         //     })
         // }).collect();
-        println!("{:?}", tickets);
-        println!("{:?}", field_map);
+        // println!("{:?}", tickets);
+        // println!("{:?}", field_map);
         // println!("{:?}",  valid_list);
         0
     }
