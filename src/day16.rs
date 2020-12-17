@@ -96,26 +96,41 @@ mod day16 {
                     _ => {
                         let v = s.split(',').map(|x| x.parse::<i32>().unwrap()).collect();
                         tickets.push(v);
-                    },
-                    // _ => (),
+                    } // _ => (),
                 }
             }
         }
+        let mut kk = 0;
+        tickets.iter().for_each(|ticket| {
+            ticket.iter().for_each(|x| {
+                let v = list
+                    .iter()
+                    .any(|(_, r1, r2)| (x >= &r1.0 && x <= &r1.1) || (x >= &r2.0 && x <= &r2.1));
+                if !v {
+                    kk += x;
+                }
+            })
+        });
 
-        let valid_list : Vec<Vec<i32>>= tickets.iter().filter(|ticket|{
-            ticket.iter().all(|x|{
-                list.iter().any(|(_, r1, r2)|{
-                        (x >= &r1.0 && x <= &r1.1) || (x >= &r2.0 && x <= &r2.1)
+        println!("kk:{:?}", kk);
+
+        let valid_list: Vec<Vec<i32>> = tickets
+            .iter()
+            .filter(|ticket| {
+                ticket.iter().all(|x| {
+                    list.iter()
+                        .any(|(_, r1, r2)| (x >= &r1.0 && x <= &r1.1) || (x >= &r2.0 && x <= &r2.1))
                 })
             })
-        }).cloned().collect();
+            .cloned()
+            .collect();
 
         println!("vvvv:{:?}", valid_list.len());
 
         let mut ret: Vec<(usize, usize)> = vec![];
         let mut ignore_set = HashSet::new();
         // let mut find = true;
-        while  ret.len() != list.len() {
+        while ret.len() != list.len() {
             for k in 0..list.len() {
                 for i in 0..list.len() {
                     if ignore_set.contains(&i) {
@@ -130,7 +145,7 @@ mod day16 {
                             match_num += 1;
                         }
                         // else{
-                            // println!("err:{:?}",(j,k, x, r1, r2,  key));
+                        // println!("err:{:?}",(j,k, x, r1, r2,  key));
                         // }
                         // let v = list.iter().filter(|(key, r1,r2)|{
                         //     (x >= r1.0 && x <= r1.1) || (x >= r2.0 && x <= r2.1)
@@ -150,14 +165,13 @@ mod day16 {
         }
 
         println!("ret,{:?}", ret);
-        let mut all:i64 = 1;
+        let mut all: i64 = 1;
         println!("asdff,{:?}", valid_list[0]);
-        for it in ret.iter(){
-            if it.0 < 6{
+        for it in ret.iter() {
+            if it.0 < 6 {
                 println!("*,{:?}", valid_list[0][it.1]);
                 all *= valid_list[0][it.1] as i64;
             }
-
         }
         println!("out,{:?}", all);
 
