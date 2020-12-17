@@ -73,7 +73,6 @@ mod day16 {
         let mut list: Vec<(String, Range, Range)> = vec![];
         let mut tickets: Vec<Vec<i32>> = vec![];
         let mut field_map: HashMap<String, HashSet<i32>> = HashMap::new();
-        let mut idx_map: HashMap<usize, usize> = HashMap::new();
         for s in vec.iter() {
             if s == "your ticket:" {
                 stage = 1;
@@ -97,11 +96,75 @@ mod day16 {
                     _ => {
                         let v = s.split(',').map(|x| x.parse::<i32>().unwrap()).collect();
                         tickets.push(v);
-                    } // _ =>()
+                    },
+                    // _ => (),
                 }
             }
         }
+
+        let valid_list : Vec<Vec<i32>>= tickets.iter().filter(|ticket|{
+            ticket.iter().all(|x|{
+                list.iter().any(|(_, r1, r2)|{
+                        (x >= &r1.0 && x <= &r1.1) || (x >= &r2.0 && x <= &r2.1)
+                })
+            })
+        }).cloned().collect();
+
+        println!("vvvv:{:?}", valid_list.len());
+
+        let mut ret: Vec<(usize, usize)> = vec![];
+        let mut ignore_set = HashSet::new();
+        // let mut find = true;
+        while  ret.len() != list.len() {
+            for k in 0..list.len() {
+                for i in 0..list.len() {
+                    if ignore_set.contains(&i) {
+                        continue;
+                    }
+                    let (key, r1, r2) = &list[i];
+                    let mut match_num = 0;
+                    for j in 0..valid_list.len() {
+                        let x = valid_list[j][k].clone();
+                        let v = (x >= r1.0 && x <= r1.1) || (x >= r2.0 && x <= r2.1);
+                        if v {
+                            match_num += 1;
+                        }
+                        // else{
+                            // println!("err:{:?}",(j,k, x, r1, r2,  key));
+                        // }
+                        // let v = list.iter().filter(|(key, r1,r2)|{
+                        //     (x >= r1.0 && x <= r1.1) || (x >= r2.0 && x <= r2.1)
+                        // }).count();
+                        // println!("{:?}",(j, i, x, key, v));
+                    }
+                    // println!("{:?}",(i, key, match_num, tickets.len()));
+                    if match_num == valid_list.len() {
+                        ret.push((i, k));
+                        ignore_set.insert(i);
+                        println!("{:?}", (k, key, match_num, match_num == valid_list.len()));
+                        break;
+                    }
+                }
+            }
+            // find = false;
+        }
+
+        println!("ret,{:?}", ret);
+        let mut all:i64 = 1;
+        println!("asdff,{:?}", valid_list[0]);
+        for it in ret.iter(){
+            if it.0 < 6{
+                println!("*,{:?}", valid_list[0][it.1]);
+                all *= valid_list[0][it.1] as i64;
+            }
+
+        }
+        println!("out,{:?}", all);
+
+        /*
+        let mut idx_map: HashMap<usize, usize> = HashMap::new();
         let init_v = (1 << list.len()) - 1;
+        println!("asdf");
 
         // tickets.iter().for_each(|ticket| {
         //     ticket.iter().enumerate().for_each(|(idx, x)| {
@@ -122,14 +185,25 @@ mod day16 {
                     if !v {
                         let v = idx_map.entry(idx).or_insert(init_v);
                         *v &= !(1 << idx);
-                        // println!("222:{:?}, {:#b}, {:#b}, {:#b}", idx, v,init_v, !(1 << idx));
+                        println!("222:{:?}, {:#b}, {:#b}, {:#b}", idx, v,init_v, !(1 << idx));
                     }
                 }
             })
         });
-        // for (k, v) in idx_map.iter(){
-        //     println!("{:?}, {:#b} ", k,v);
-        // }
+        // let mut idx = 0;
+            let mut num = 0;
+            for (k, v) in idx_map.iter(){
+                for i in 0..tickets[0].len(){
+                    if v & (1 << i) > 0{
+                        num+=1;
+                    }
+                }
+                // println!("{:?}, {:#b} ", k,v);
+                if num == 1 && num > 1{
+                    print(i)
+                }
+            }
+        }
         // for (idx, it) in list.enumerate().iter(){
         //     for (k, v) in idx_map.iter(){
         //         println!("{:?}, {:#b} ", k,v);
@@ -156,6 +230,7 @@ mod day16 {
         // println!("{:?}", tickets);
         // println!("{:?}", field_map);
         // println!("{:?}",  valid_list);
+        */
         0
     }
 
@@ -190,8 +265,8 @@ mod tests {
 
     #[test]
     fn day16_part2() {
-        let list = common::parse_from_file("./data/day16_test2.txt");
-        // let list = common::parse_from_file("./data/day16_part1.txt");
+        // let list = common::parse_from_file("./data/day16_test2.txt");
+        let list = common::parse_from_file("./data/day16_part1.txt");
         // let v = day16::part1(Box::new(list.unwrap()));
         // let v = day16::part1("0,3,6".to_string());
         // let v = day16::part1("3,1,2".to_string());
