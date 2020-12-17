@@ -73,6 +73,7 @@ mod day16 {
         let mut list: Vec<(String, Range, Range)> = vec![];
         let mut tickets: Vec<Vec<i32>> = vec![];
         let mut field_map: HashMap<String, HashSet<i32>> = HashMap::new();
+        let mut idx_map: HashMap<usize, HashSet<String>> = HashMap::new();
         for s in vec.iter() {
             if s == "your ticket:" {
                 stage = 1;
@@ -101,16 +102,36 @@ mod day16 {
             }
         }
 
+        // tickets.iter().for_each(|ticket| {
+        //     ticket.iter().enumerate().for_each(|(idx, x)| {
+        //         list.iter().for_each(|(key, r1, r2)| {
+        //             let v = (x >= &r1.0 && x <= &r1.1) || (x >= &r2.0 && x <= &r2.1);
+        //             if v {
+        //                 field_map.get_mut(key).unwrap().insert(idx as i32);
+        //             }
+        //         });
+        //     })
+        // });
+
         tickets.iter().for_each(|ticket| {
             ticket.iter().enumerate().for_each(|(idx, x)| {
                 list.iter().for_each(|(key, r1, r2)| {
                     let v = (x >= &r1.0 && x <= &r1.1) || (x >= &r2.0 && x <= &r2.1);
-                    if v {
-                        field_map.get_mut(key).unwrap().insert(idx as i32);
+                    println!("{:?}", (idx, key, v));
+                    if !v{
+                        idx_map.entry(idx).or_insert(HashSet::new()).insert(key.to_string());
                     }
                 });
             })
         });
+        println!("{:?}", idx_map);
+        // for it in list.iter(){
+        //     for (idx, set) in idx_map.iter(){
+        //         if !set.contains(&it.0){
+        //             println!("{:?}", (idx, it.0.to_string()))
+        //         }
+        //     }
+        // }
 
         // let valid_list :Vec<_>=  tickets.iter().filter(|ticket|{
         //     ticket.iter().all(|x|{
