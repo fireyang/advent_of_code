@@ -96,8 +96,7 @@ mod day16 {
                     _ => {
                         let v = s.split(',').map(|x| x.parse::<i32>().unwrap()).collect();
                         tickets.push(v);
-                    },
-                    // _ => (),
+                    } // _ => (),
                 }
             }
         }
@@ -138,7 +137,7 @@ mod day16 {
                     continue;
                 }
                 let mut v = 0;
-                let mut find_row =0;
+                let mut find_row = 0;
                 for i in 0..list.len() {
                     if ignore_row.contains(&i) {
                         continue;
@@ -161,10 +160,10 @@ mod day16 {
                     }
                     // println!("{:?}",(i, key, match_num, tickets.len()));
                     if match_num == valid_list.len() {
-                        v +=1;
-                        if v > 1{
+                        v += 1;
+                        if v > 1 {
                             break;
-                        }else{
+                        } else {
                             find_row = i;
                         }
                         // ret.push((i, k));
@@ -172,13 +171,12 @@ mod day16 {
                         // break;
                     }
                 }
-                if v == 1{
+                if v == 1 {
                     // println!("{:?}", (find_row, k));
                     ignore_row.insert(find_row);
                     ignore_col.insert(k);
                     ret.push((find_row, k));
                 }
-
             }
             find += 1;
         }

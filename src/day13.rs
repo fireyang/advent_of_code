@@ -72,7 +72,6 @@ mod day13 {
         let mut find = false;
         // let mut idx =  118000000000000 / step.1;
         let mut idx = 0;
-        let mut ddd = 0;
         let mut pre = 0;
         // let mut base_v = 0;
         // let mut step_v = 0;
@@ -88,13 +87,9 @@ mod day13 {
                 ret
             });
             if find {
-                ddd += 1;
                 println!("v2:{:?}", (idx, next, next - pre));
                 pre = next;
                 // find = false;
-                // if ddd > 10{
-                //     find = true;
-                // }
             }
             if idx % 1000000 == 0 {
                 println!("v2:{:?}", (idx, next, find));
@@ -107,6 +102,7 @@ mod day13 {
         0
     }
 
+    #[allow(dead_code)]
     pub fn get_step(m: i64, n: i64, offset: i64) -> (i64, i64) {
         let mut find = false;
         let mut idx = 0;
