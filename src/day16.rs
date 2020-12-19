@@ -68,7 +68,7 @@ mod day16 {
     type Range = (i32, i32);
 
     #[allow(dead_code)]
-    pub fn part2(vec: Vec<String>) -> i32 {
+    pub fn part2(vec: Vec<String>) -> i64 {
         let mut stage = 0;
         let mut list: Vec<(String, Range, Range)> = vec![];
         let mut tickets: Vec<Vec<i32>> = vec![];
@@ -96,7 +96,8 @@ mod day16 {
                     _ => {
                         let v = s.split(',').map(|x| x.parse::<i32>().unwrap()).collect();
                         tickets.push(v);
-                    } // _ => (),
+                    },
+                    // _ => (),
                 }
             }
         }
@@ -125,18 +126,24 @@ mod day16 {
             .cloned()
             .collect();
 
-        println!("vvvv:{:?}", valid_list.len());
+        // println!("vvvv:{:?}", valid_list.len());
 
         let mut ret: Vec<(usize, usize)> = vec![];
-        let mut ignore_set = HashSet::new();
-        // let mut find = true;
-        while ret.len() != list.len() {
+        let mut ignore_row = HashSet::new();
+        let mut ignore_col = HashSet::new();
+        let mut find = 0;
+        while find < list.len() {
             for k in 0..list.len() {
+                if ignore_col.contains(&k) {
+                    continue;
+                }
+                let mut v = 0;
+                let mut find_row =0;
                 for i in 0..list.len() {
-                    if ignore_set.contains(&i) {
+                    if ignore_row.contains(&i) {
                         continue;
                     }
-                    let (key, r1, r2) = &list[i];
+                    let (_key, r1, r2) = &list[i];
                     let mut match_num = 0;
                     for j in 0..valid_list.len() {
                         let x = valid_list[j][k].clone();
@@ -154,98 +161,36 @@ mod day16 {
                     }
                     // println!("{:?}",(i, key, match_num, tickets.len()));
                     if match_num == valid_list.len() {
-                        ret.push((i, k));
-                        ignore_set.insert(i);
-                        println!("{:?}", (k, key, match_num, match_num == valid_list.len()));
-                        break;
+                        v +=1;
+                        if v > 1{
+                            break;
+                        }else{
+                            find_row = i;
+                        }
+                        // ret.push((i, k));
+                        // ignore_set.insert(i);
+                        // break;
                     }
                 }
+                if v == 1{
+                    // println!("{:?}", (find_row, k));
+                    ignore_row.insert(find_row);
+                    ignore_col.insert(k);
+                    ret.push((find_row, k));
+                }
+
             }
-            // find = false;
+            find += 1;
         }
 
-        println!("ret,{:?}", ret);
         let mut all: i64 = 1;
-        println!("asdff,{:?}", valid_list[0]);
         for it in ret.iter() {
             if it.0 < 6 {
-                println!("*,{:?}", valid_list[0][it.1]);
                 all *= valid_list[0][it.1] as i64;
             }
         }
         println!("out,{:?}", all);
-
-        /*
-        let mut idx_map: HashMap<usize, usize> = HashMap::new();
-        let init_v = (1 << list.len()) - 1;
-        println!("asdf");
-
-        // tickets.iter().for_each(|ticket| {
-        //     ticket.iter().enumerate().for_each(|(idx, x)| {
-        //         list.iter().for_each(|(key, r1, r2)| {
-        //             let v = (x >= &r1.0 && x <= &r1.1) || (x >= &r2.0 && x <= &r2.1);
-        //             if v {
-        //                 field_map.get_mut(key).unwrap().insert(idx as i32);
-        //             }
-        //         });
-        //     })
-        // });
-
-        tickets.iter().for_each(|ticket| {
-            ticket.iter().enumerate().for_each(|(idx, x)| {
-                for it in list.iter() {
-                    let (_key, r1, r2) = it;
-                    let v = (x >= &r1.0 && x <= &r1.1) || (x >= &r2.0 && x <= &r2.1);
-                    if !v {
-                        let v = idx_map.entry(idx).or_insert(init_v);
-                        *v &= !(1 << idx);
-                        println!("222:{:?}, {:#b}, {:#b}, {:#b}", idx, v,init_v, !(1 << idx));
-                    }
-                }
-            })
-        });
-        // let mut idx = 0;
-            let mut num = 0;
-            for (k, v) in idx_map.iter(){
-                for i in 0..tickets[0].len(){
-                    if v & (1 << i) > 0{
-                        num+=1;
-                    }
-                }
-                // println!("{:?}, {:#b} ", k,v);
-                if num == 1 && num > 1{
-                    print(i)
-                }
-            }
-        }
-        // for (idx, it) in list.enumerate().iter(){
-        //     for (k, v) in idx_map.iter(){
-        //         println!("{:?}, {:#b} ", k,v);
-        //     }
-        //     println!("{:?}, {:#b} ", k,v);
-        // }
-        // for it in list.iter(){
-        //     for (idx, set) in idx_map.iter(){
-        //         if !set.contains(&it.0){
-        //             println!("{:?}", (idx, it.0.to_string()))
-        //         }
-        //     }
-        // }
-
-        // let valid_list :Vec<_>=  tickets.iter().filter(|ticket|{
-        //     ticket.iter().all(|x|{
-        //         list.iter().any(|(key, r1, r2)|{
-        //             let v = (x >= &r1.0 && x <= &r1.1 )|| (x >= &r2.0 && x <= &r2.1);
-        //             // println!("{:?}", (key, r1,r2, x, v));
-        //             v
-        //         })
-        //     })
-        // }).collect();
-        // println!("{:?}", tickets);
-        // println!("{:?}", field_map);
-        // println!("{:?}",  valid_list);
-        */
-        0
+        all
     }
 
     fn get_range2(s: &String) -> Range {
@@ -264,18 +209,18 @@ mod tests {
     use super::*;
     use crate::common;
 
-    // #[test]
-    // fn day16_part1() {
-    //     // let list = common::parse_from_file("./data/day16_test.txt");
-    //     let list = common::parse_from_file("./data/day16_part1.txt");
-    //     // let v = day16::part1(Box::new(list.unwrap()));
-    //     // let v = day16::part1("0,3,6".to_string());
-    //     // let v = day16::part1("3,1,2".to_string());
-    //     // let v = day16::part1("2,1,3".to_string());
-    //     let v = day16::part1(list.unwrap());
-    //     // let v = day16::part1("2,1,3".to_string());
-    //     assert_eq!(v, 25972);
-    // }
+    #[test]
+    fn day16_part1() {
+        // let list = common::parse_from_file("./data/day16_test.txt");
+        let list = common::parse_from_file("./data/day16_part1.txt");
+        // let v = day16::part1(Box::new(list.unwrap()));
+        // let v = day16::part1("0,3,6".to_string());
+        // let v = day16::part1("3,1,2".to_string());
+        // let v = day16::part1("2,1,3".to_string());
+        let v = day16::part1(list.unwrap());
+        // let v = day16::part1("2,1,3".to_string());
+        assert_eq!(v, 25972);
+    }
 
     #[test]
     fn day16_part2() {
@@ -287,6 +232,6 @@ mod tests {
         // let v = day16::part1("2,1,3".to_string());
         let v = day16::part2(list.unwrap());
         // let v = day16::part1("2,1,3".to_string());
-        assert_eq!(v, 25972);
+        assert_eq!(v, 622670335901);
     }
 }
