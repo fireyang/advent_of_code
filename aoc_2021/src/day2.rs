@@ -25,9 +25,8 @@ mod day2 {
     pub fn part2(vec: Vec<String>) -> i32 {
         let v: Vec<(&str, i32)> = vec
             .iter()
-            .map(|x| x.split_whitespace().collect::<Vec<&str>>())
-            .map(|x| (x[0], x[1].parse::<i32>().unwrap()))
-            // .map(|x| (x.0, x.1.parse::<i32>().unwrap()))
+            .filter_map(|x| x.split_once(" ")
+                .map(|(a,b)|(a, b.parse::<i32>().unwrap())))
             .collect();
         // println!("{:?}", v);
         let mut x = 0;
@@ -38,7 +37,7 @@ mod day2 {
                 "forward" => {x += b;y +=aim*b},
                 "down" => aim += b,
                 "up" => aim -= b,
-                _ => y = y,
+                _ => unreachable!(),
             }
         }
         // println!("{:?}", (x, y));
